@@ -1,81 +1,35 @@
-import { Group, Code, ScrollArea, rem } from '@mantine/core';
-import {
-    IconNotes,
-    IconCalendarStats,
-    IconGauge,
-    IconFileAnalytics,
-    IconAdjustments,
-    IconLock,
-} from '@tabler/icons-react';
-import { UserButton } from '../lib/UserButton/UserButton';
-import { LinksGroup } from '../lib/NavbarLinksGroup/NavbarLinksGroup';
-import { Logo } from './Logo.tsx';
-import classes from './Sidebar.module.css';
+import React, {useState} from 'react';
+import {AppShell, NavLink} from '@mantine/core';
+import {Home, ChevronRight, ChevronDown} from 'tabler-icons-react';
+import Submenu from "../submenu/Submenu.tsx";
 
-const mockdata = [
-    { label: 'Dashboard', icon: IconGauge },
-    {
-        label: 'Manuscript',
-        icon: IconNotes,
-        initiallyOpened: true,
-        links: [
-            { label: 'Chapter 1', link: '/' },
-            { label: 'Chapter 2', link: '/' },
-            { label: 'Chapter 3', link: '/' },
-            { label: 'Chapter 4', link: '/' },
-        ],
-    },
-    {
-        label: 'Plot',
-        icon: IconCalendarStats,
-        links: [
-            { label: 'Plot 1', link: '/' },
-            { label: 'Plot 2', link: '/' },
-            { label: 'Plot 3', link: '/' },
-        ],
-    },
-    {
-        label: 'Characters',
-        icon: IconCalendarStats,
-        links: [
-            { label: 'Character 1', link: '/' },
-            { label: 'Character 2', link: '/' },
-            { label: 'Character 3', link: '/' },
-        ],
-    },
-    { label: 'Story Notes', icon: IconFileAnalytics },
+const Sidebar: React.FC = () =>
+{
+    const [submenuOpened, setSubmenuOpened] = useState<string | null>(null);
 
-    { label: 'Settings', icon: IconAdjustments },
+    const toggleSubmenu = (menu: string) =>
     {
-        label: 'Security',
-        icon: IconLock,
-        links: [
-            { label: 'Enable 2FA', link: '/' },
-            { label: 'Change password', link: '/' },
-            { label: 'Recovery codes', link: '/' },
-        ],
-    },
-];
-
-export function Sidebar() {
-    const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
+        setSubmenuOpened(submenuOpened === menu ? null : menu);
+    };
 
     return (
-        <nav className={classes.navbar}>
-            <div className={classes.header}>
-                <Group justify="space-between">
-                    <Logo style={{ width: rem(120) }} />
-                    <Code fw={700}>v3.1.2</Code>
-                </Group>
-            </div>
-
-            <ScrollArea className={classes.links}>
-                <div className={classes.linksInner}>{links}</div>
-            </ScrollArea>
-
-            <div className={classes.footer}>
-                <UserButton />
-            </div>
-        </nav>
+        <AppShell.Navbar p="xs" className="h-screen bg-gray-100 border-r border-gray-200">
+            <NavLink label="With icon" leftSection={<Home size={16} stroke={'1.5'}/>}/>
+            <NavLink
+                label="Projects"
+                leftSection={<Home/>}
+                onClick={() => toggleSubmenu('projects')}
+                rightSection={
+                    submenuOpened === 'projects' ? <ChevronDown/> : <ChevronRight/>
+                }
+                className="mb-2"
+            />
+            {submenuOpened === 'projects' && (
+                <Submenu
+                    items={[{label: 'Project 1', path: '/projects/123'}, {label: 'Project 2', path: '/projects/456'}]}/>
+            )}
+        </AppShell.Navbar>
     );
-}
+};
+
+export default Sidebar;
