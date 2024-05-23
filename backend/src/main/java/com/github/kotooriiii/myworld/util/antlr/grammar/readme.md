@@ -1,0 +1,1 @@
+To compile the grammar again, run maven antlr4. 
