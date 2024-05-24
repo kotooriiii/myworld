@@ -1,15 +1,10 @@
-import React from 'react';
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
+import { theme } from "./theme";
+import { BasicAppShell } from "./BasicAppShell";
 
-import {BasicAppShell} from "./BasicAppShell.tsx";
-import {MantineProvider} from "@mantine/core";
-
-const App: React.FC = () =>
-{
-    return (
-      <MantineProvider>
-          <BasicAppShell/>
-      </MantineProvider>
-    );
-};
-
-export default App;
+export default function App() {
+  return <MantineProvider theme={theme}>
+  <BasicAppShell/>
+  </MantineProvider>;
+}

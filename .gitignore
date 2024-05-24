@@ -1,3 +1,4 @@
 /.git/
 /.idea/
 /backend/.mvn/
+/frontend/node_modules
