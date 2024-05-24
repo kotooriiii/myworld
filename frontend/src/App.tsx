@@ -1,10 +1,17 @@
 import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
-import { theme } from "./theme";
-import { BasicAppShell } from "./BasicAppShell";
+import '@mantine/tiptap/styles.css';
 
-export default function App() {
-  return <MantineProvider theme={theme}>
-  <BasicAppShell/>
-  </MantineProvider>;
+import {MantineProvider} from "@mantine/core";
+import {theme} from "./theme";
+ import AppRouter from "./router/AppRouter.tsx";
+
+export default function App()
+{
+    return (
+    <MantineProvider
+        theme={theme}
+    >
+        <AppRouter/>
+    </MantineProvider>
+    );
 }
