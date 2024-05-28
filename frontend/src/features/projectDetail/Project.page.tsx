@@ -1,13 +1,13 @@
-import {AppShell, Badge, Burger, Group, NavLink, ScrollArea} from '@mantine/core';
-import {useDisclosure} from '@mantine/hooks';
-import {IconHome2, IconGauge, IconChevronRight, IconActivity, IconCircleOff} from '@tabler/icons-react';
+import React from 'react';
+import {useDisclosure} from "@mantine/hooks";
+import {AppShell, Badge, Burger, Group, NavLink, ScrollArea} from "@mantine/core";
+import {IconActivity, IconChevronRight, IconCircleOff, IconGauge, IconHome2} from "@tabler/icons-react";
+import AppRichTextEditor from "../../common/components/RichTextEditor/AppRichTextEditor.tsx";
 
-import React from "react";
-import AppRichTextEditor from "../../RichTextEditor/AppRichTextEditor.tsx";
+const Project: React.FC = () => {
+     const [opened, {toggle}] = useDisclosure();
 
-const WorkLayout: React.FC = () =>
-{
-    const [opened, {toggle}] = useDisclosure();
+
 
     return (
         <AppShell
@@ -20,6 +20,7 @@ const WorkLayout: React.FC = () =>
                     <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm"/>
                 </Group>
             </AppShell.Header>
+
             <AppShell.Navbar p="md">
                 <ScrollArea h={'100%'} type="never">
                     <NavLink
@@ -83,7 +84,7 @@ const WorkLayout: React.FC = () =>
 
                     <NavLink
                         href="#required-for-focus"
-                        label="First parent link"
+                        label="Tasks"
                         leftSection={<IconGauge size="1rem" stroke={1.5}/>}
                         childrenOffset={28}
                     >
@@ -98,11 +99,12 @@ const WorkLayout: React.FC = () =>
                 </ScrollArea>
 
             </AppShell.Navbar>
-            <AppShell.Main> <AppRichTextEditor/>
+            <AppShell.Main>
+                <AppRichTextEditor/>
             </AppShell.Main>
             <AppShell.Aside>Aside</AppShell.Aside>
         </AppShell>
     );
-}
+};
 
-export default WorkLayout;
+export default Project;

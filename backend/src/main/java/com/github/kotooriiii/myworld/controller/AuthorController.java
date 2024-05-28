@@ -3,6 +3,7 @@ package com.github.kotooriiii.myworld.controller;
 import com.github.kotooriiii.myworld.dto.AuthorDTO;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorRegistrationRequest;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorUpdateRequest;
+import com.github.kotooriiii.myworld.dto.response.auth.AuthenticationResponse;
 import com.github.kotooriiii.myworld.service.AuthorService;
 import com.github.kotooriiii.myworld.service.security.jwt.JWTUtil;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,13 @@ public class AuthorController
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtToken)
                 .body(authorDTO);
+    }
+
+    @GetMapping("account")
+    public AuthorDTO getAccountInfo()
+    {
+        UUID authorRequesterId = authorService.getCurrentUserId();
+        return getAuthor(authorRequesterId);
     }
 
     @GetMapping("all")
@@ -90,7 +98,6 @@ public class AuthorController
     {
         authorService.deleteAuthorById(authorId);
     }
-
 
 
     @GetMapping(value = "{authorId}/profile-image", produces = MediaType.IMAGE_PNG_VALUE)
