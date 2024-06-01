@@ -1,4 +1,5 @@
 /.git/
 /.idea/
 /backend/.mvn/
+/backend/src/main/resources/secrets.env
 /frontend/node_modules
