@@ -14,8 +14,9 @@ const ProtectedRoutes = () => {
 
     //token is in storage, but state is not updated. did the page reload?
     useEffect(() => {
-        dispatch(accountInfo());
-    }, [token, isAuthenticated]);
+        if(token && !isAuthenticated)
+            dispatch(accountInfo());
+    }, []);
 
 
     if (token && !isAuthenticated)

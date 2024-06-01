@@ -7,6 +7,7 @@ import com.github.kotooriiii.myworld.model.ProjectCollaborator;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ProjectCollaboratorRowMapper implements RowMapper<ProjectCollaborator> {
@@ -29,7 +30,8 @@ public class ProjectCollaboratorRowMapper implements RowMapper<ProjectCollaborat
         author.setName(rs.getString("a_name"));
         author.setEmail(rs.getString("a_email"));
         author.setBirthDate(rs.getTimestamp("a_birth_date").toLocalDateTime().toLocalDate());
-        author.setGender(Gender.valueOf(rs.getString("a_gender")));
+        String aGender = rs.getString("a_gender");
+        author.setGender(aGender == null ? null : Gender.valueOf(aGender));
         author.setImageIconId(rs.getString("a_image_icon_id"));
 
         // Mapping project_collaborators fields

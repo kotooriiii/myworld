@@ -9,6 +9,7 @@ public record AuthorRegistrationRequest(
         String email,
         String password,
         LocalDate birthDate,
-        Gender gender
+        Gender gender,
+        String imageIconId
 ) {
 }

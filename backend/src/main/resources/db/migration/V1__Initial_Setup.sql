@@ -4,9 +4,9 @@ CREATE TABLE authors
 
     name          TEXT NOT NULL,
     email         TEXT NOT NULL UNIQUE,
-    password      TEXT NOT NULL,
-    gender        TEXT NOT NULL,
-    birth_date    DATE NOT NULL,
+    password      TEXT,
+    gender        TEXT,
+    birth_date    DATE,
 
     image_icon_id VARCHAR(36),
 

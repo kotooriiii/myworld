@@ -12,7 +12,6 @@ import com.github.kotooriiii.myworld.model.Author;
 import com.github.kotooriiii.myworld.service.mapper.AuthorMapper;
 import com.github.kotooriiii.myworld.service.s3.S3Buckets;
 import com.github.kotooriiii.myworld.service.s3.S3Service;
-import com.github.kotooriiii.myworld.service.security.userDetailsService.AuthorUserDetailsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -27,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -82,6 +82,14 @@ public class AuthorService
                 ));
     }
 
+    public AuthorDTO getAuthor(String email) {
+        return authorDao.selectAuthorByEmail(email)
+                .map(authorMapper)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "author with email [%s] not found".formatted(email)
+                ));
+    }
+
     public AuthorDTO createAuthor(AuthorRegistrationRequest authorRegistrationRequest) {
         // check if email exists
         String email = authorRegistrationRequest.email();
@@ -101,11 +109,20 @@ public class AuthorService
                 .password(passwordEncoder.encode(authorRegistrationRequest.password()))
                 .birthDate(authorRegistrationRequest.birthDate())
                 .gender(authorRegistrationRequest.gender())
-                .imageIconId(null)
+                .imageIconId(authorRegistrationRequest.imageIconId())
+                .isNewUser(true)
                 .build();
-
-       return authorMapper.apply(authorDao.createAuthor(author));
+        authorDao.createAuthor(author);
+       return authorMapper.apply(author);
     }
+
+    public AuthorDTO registerOrCreateAuthor(AuthorRegistrationRequest authorRegistrationRequest) {
+         String email = authorRegistrationRequest.email();
+        Optional<AuthorDTO> authorDTOOptional = authorDao.selectAuthorByEmail(email).map(authorMapper);
+
+        return authorDTOOptional.orElseGet(() -> createAuthor(authorRegistrationRequest));
+    }
+
 
     public void deleteAuthorById(UUID authorId) {
         checkIfAuthorExistsOrThrow(authorId);

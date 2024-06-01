@@ -1,6 +1,8 @@
 import {createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {AuthorLoginRequest, AuthorRegistrationRequest, ErrorMessage, UserData} from "../../common/types/auth.ts";
 import authService from "../../service/authService.ts";
+import oAuthService from "../../service/oAuthService.ts";
+
 import {AxiosError} from "axios";
 
 
@@ -68,6 +70,37 @@ const login = createAsyncThunk<LoginStateResult, AuthorLoginRequest, { rejectVal
                 {
                     return thunkAPI.rejectWithValue('User does not exist' as ErrorMessage);
                 }
+
+                return thunkAPI.rejectWithValue(error.response?.data as ErrorMessage);
+            } else
+            {
+                console.log("Unexpected error.", error)
+                return thunkAPI.rejectWithValue('An unexpected error occurred' as ErrorMessage);
+
+            }
+
+        }
+    });
+
+const authenticate = createAsyncThunk<LoginStateResult, string, { rejectValue: ErrorMessage }>('auth/callback',
+    async (authorizationCode, thunkAPI) =>
+    {
+        try
+        {
+            const response= await oAuthService.authenticate(authorizationCode);
+
+            const token: string = response.headers['authorization'] || response.data.token;
+            return {user: response.data as UserData, token: token};
+        } catch (error)
+        {
+            // Check if the error is due to the user not existing
+            if (error instanceof AxiosError)
+            {
+                if (error.response?.status === 404)
+                {
+                    return thunkAPI.rejectWithValue('User does not exist' as ErrorMessage);
+                }
+
 
                 return thunkAPI.rejectWithValue(error.response?.data as ErrorMessage);
             } else
@@ -173,6 +206,32 @@ const authSlice = createSlice({
             {
                 state.isLoading = false;
                 state.error = action.payload || null;
+                localStorage.removeItem('token');
+                state.user = null;
+                state.token = null;
+                state.isAuthenticated = false;
+            })
+            .addCase(authenticate.pending, (state) =>
+            {
+                state.isLoading = true;
+            })
+            .addCase(authenticate.fulfilled, (state, action) =>
+            {
+                state.isLoading = false;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+                state.isAuthenticated = true;
+                localStorage.setItem('token', action.payload.token);
+
+            })
+            .addCase(authenticate.rejected, (state, action) =>
+            {
+                state.isLoading = false;
+                state.error = action.payload || null;
+                localStorage.removeItem('token');
+                state.user = null;
+                state.token = null;
+                state.isAuthenticated = false;
             })
             .addCase(accountInfo.pending, (state) =>
             {
@@ -203,6 +262,6 @@ const authSlice = createSlice({
 });
 
 export const {logout} = authSlice.actions;
-export {login, register, accountInfo}
+export {login, register, accountInfo, authenticate}
 
 export default authSlice.reducer;

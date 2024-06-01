@@ -10,10 +10,9 @@ const apiClientConfig: CreateAxiosDefaults = {
 // Create a new Axios instance with the cloned configuration
 const apiClient = axios.create(apiClientConfig);
 
-
-
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) =>
 {
+    config.baseURL = config.baseURL + "/api/v1";
     const token = localStorage.getItem('token');
     if (token)
     {

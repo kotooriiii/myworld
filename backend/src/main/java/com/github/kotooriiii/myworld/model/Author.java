@@ -61,6 +61,9 @@ public class Author implements UserDetails, GenericModel
     @JsonBackReference
     private Set<ProjectCollaborator> projectCollaborators;
 
+    @Transient
+    private transient boolean isNewUser;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {

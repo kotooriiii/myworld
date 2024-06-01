@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {register} from "./authSlice.ts";
 import {AppDispatch} from "../../app/store.ts";
@@ -32,8 +32,7 @@ const Register: React.FC = () =>
 {
     const dispatch = useDispatch<AppDispatch>();
 
-    const location = useLocation();
-    const navigate = useNavigate();
+     const navigate = useNavigate();
 
     const handleRegister = async (values: typeof form.values) =>
     {
@@ -49,9 +48,7 @@ const Register: React.FC = () =>
 
         if (register.fulfilled.match(resultAction))
         {
-            // If login was successful, redirect to the saved URL or default to the homepage
-            const redirectTo = location.state?.from?.pathname || '/';
-            navigate(redirectTo, {replace: true});
+            navigate('/projects'); //do not use predefined utils, because this is the first time theyve made a project.
         }
     };
 

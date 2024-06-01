@@ -4,6 +4,7 @@ import com.github.kotooriiii.myworld.dto.AuthorDTO;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorRegistrationRequest;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorUpdateRequest;
 import com.github.kotooriiii.myworld.dto.response.auth.AuthenticationResponse;
+import com.github.kotooriiii.myworld.model.Author;
 import com.github.kotooriiii.myworld.service.AuthorService;
 import com.github.kotooriiii.myworld.service.security.jwt.JWTUtil;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -38,11 +40,13 @@ public class AuthorController
             @RequestBody AuthorRegistrationRequest request)
     {
         AuthorDTO authorDTO = authorService.createAuthor(request);
+
         String jwtToken = jwtUtil.issueToken(request.email(), "ROLE_USER");
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, jwtToken)
                 .body(authorDTO);
     }
+
 
     @GetMapping("account")
     public AuthorDTO getAccountInfo()

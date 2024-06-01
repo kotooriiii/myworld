@@ -23,7 +23,8 @@ public class AuthorMapper implements Function<Author, AuthorDTO> {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()),
                 author.getUsername(),
-                author.getImageIconId()
+                author.getImageIconId(),
+                author.isNewUser()
         );
     }
 }

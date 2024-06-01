@@ -7,6 +7,7 @@ import Project from "../features/projectDetail/Project.page.tsx";
 import ProtectedRoutes from "./protectedRoutes.tsx";
 import Register from "../features/auth/Register.page.tsx";
 import ProjectsHome from "../features/projectHome/ProjectsHome.page.tsx";
+import Callback from "../features/auth/Callback.page.tsx";
 
 const AppRouter: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/callback" element={<Callback/>} />
 
                 <Route element={<ProtectedRoutes/>}>
                     <Route path='/projects/:projectUUID' element={<Project/>} />

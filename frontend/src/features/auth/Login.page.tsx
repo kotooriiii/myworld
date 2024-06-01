@@ -24,15 +24,15 @@ import {GoogleButton} from "../../common/components/oauth_buttons/GoogleButton.t
 import {TwitterButton} from "../../common/components/oauth_buttons/TwitterButton.tsx";
 import {AuthorLoginRequest} from "../../common/types/auth.ts";
 import {LoginRegisterLayout} from "../../common/layout/LoginRegisterLayout.tsx";
+import {redirectByGoogle} from "../../service/oAuthService.ts";
+import {navigateWithRedirect} from "../../service/RedirectUtils.tsx";
 
 const Login: React.FC = () =>
 {
     const dispatch = useDispatch<AppDispatch>();
-
     const location = useLocation();
     const navigate = useNavigate();
 
-     const { from } = location.state || { from: { pathname: '/' } };
 
     const handleLogin = async (values: typeof form.values) =>
     {
@@ -43,9 +43,30 @@ const Login: React.FC = () =>
 
         if (login.fulfilled.match(resultAction))
         {
-            // If login was successful, redirect to the saved URL or default to the homepage
-            navigate(from, {replace: true});
+            navigateWithRedirect(location.state, navigate);
         }
+
+    };
+
+    const handleLoginByGoogle = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    {
+        e.preventDefault();
+
+        void redirectByGoogle(location.state);
+        return <div>Redirecting to authentication provider...</div>
+
+
+//        window.location.href = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=}`;
+
+        //document.location.href = `http://localhost:8080/oauth2/authorization/google?redirectTo=${encodeURIComponent(window.location.origin + from.pathname)}`; //todo
+
+        // const resultAction = await dispatch(loginByGoogle());
+        //
+        // if (login.fulfilled.match(resultAction))
+        // {
+        //     // If login was successful, redirect to the saved URL or default to the homepage
+        //     navigate(from, {replace: true});
+        // }
     };
 
     interface LoginState
@@ -77,7 +98,10 @@ const Login: React.FC = () =>
                 </Center>
 
                 <Group grow mb="md" mt="md">
-                    <GoogleButton radius="xl">Google</GoogleButton>
+                    <GoogleButton radius="xl" onClick={(e) =>
+                    {
+                        handleLoginByGoogle(e)
+                    }}>Google</GoogleButton>
                     <TwitterButton radius="xl">Twitter</TwitterButton>
                 </Group>
 

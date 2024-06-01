@@ -24,6 +24,7 @@ export interface UserData {
     birthDate: Date,
     username: string,
     imageIconId: string
+    isNewUser: boolean
 }
 
 export type ErrorMessage = string;

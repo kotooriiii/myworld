@@ -14,7 +14,12 @@ public record AuthorDTO(
         LocalDate birthDate,
         List<String> roles,
         String username,
-        String imageIconId
+        String imageIconId,
+        boolean isNewUser
 ){
-
+    public AuthorDTO(UUID id, String name, String email, Gender gender, LocalDate birthDate, List<String> roles,
+                     String username, String imageIconId)
+    {
+        this(id, name, email, gender, birthDate, roles, username, imageIconId, false);
+    }
 }

@@ -32,7 +32,7 @@ public class AuthorJDBCDaoImpl implements AuthorDao
                 VALUES (?, ?, ?, ?, ?, ?);
                 """;
         int result = jdbcClient.sql(sql)
-                .params(Stream.of(authorToCreate.getId(), authorToCreate.getName(), authorToCreate.getEmail(), authorToCreate.getPassword(), authorToCreate.getBirthDate(), authorToCreate.getGender().name()).toList())
+                .params(Stream.of(authorToCreate.getId(), authorToCreate.getName(), authorToCreate.getEmail(), authorToCreate.getPassword(), authorToCreate.getBirthDate(), authorToCreate.getGender() == null ? null : authorToCreate.getGender().name()).toList())
                 .update();
         Assert.state(result == 1, "Failed to create author with email : " + authorToCreate.getEmail());
         return authorToCreate;
@@ -165,7 +165,7 @@ public class AuthorJDBCDaoImpl implements AuthorDao
                 .param("email", authorToUpdate.getEmail())
                 .param("password", authorToUpdate.getPassword())
                 .param("birth_date", authorToUpdate.getBirthDate())
-                .param("gender", authorToUpdate.getGender().name())
+                .param("gender", authorToUpdate.getGender() == null ? null : authorToUpdate.getGender().name())
                 .param("image_icon_id", authorToUpdate.getImageIconId())
                 .param("id", authorToUpdate.getId())
                 .update();
