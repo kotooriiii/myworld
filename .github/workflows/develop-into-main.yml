@@ -1,0 +1,22 @@
+name: Develop into Main
+on: 
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9,15,21,3 * * *'  # 9am, 3pm, 9pm, 3am UTC corresponds to 2am, 8am, 2pm, 8pm PST
+
+jobs:
+  merge-develop-to-main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set Git config
+      run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+    - name: Merge develop into main
+      run: |
+          git fetch --unshallow
+          git checkout main
+          git pull
+          git merge --no-ff origin/develop -m "Auto-merge develop into master"
+          git push
