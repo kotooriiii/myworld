@@ -3,3 +3,5 @@
 /backend/.mvn/
 /backend/src/main/resources/secrets.env
 /frontend/node_modules
+# Ignore all .env files
+*.env
