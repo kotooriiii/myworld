@@ -30,7 +30,8 @@ public class SystemEnvironmentUtils
         for (File envFile : envFiles) {
             if (envFile.exists()) {
                 Dotenv dotenv = Dotenv.configure()
-                        .filename(envFile.getAbsolutePath())
+                        .directory(envFile.getParent())
+                        .filename(envFile.getName())
                         .load();
                 dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
             }
