@@ -1,40 +1,49 @@
 import React from 'react';
-import {useDisclosure} from "@mantine/hooks";
-import {AppShell, Burger, Group, NavLink, ScrollArea} from "@mantine/core";
-import {IconHome2} from "@tabler/icons-react";
-import AppRichTextEditor from "../../common/components/RichTextEditor/AppRichTextEditor.tsx";
+import {AppShell, Autocomplete, Button, Center, Divider, Group, Flex, Stack, Container, Grid, Card, Text, Badge, AspectRatio, rem, Space} from "@mantine/core";
+import { IconWorld, IconUserCircle, IconSearch, IconPlus } from '@tabler/icons-react';
+import { FeaturesCards } from './FeaturesCards';
 
 const ProjectsHome: React.FC = () => {
-     const [opened, {toggle}] = useDisclosure();
-
-
-
     return (
         <AppShell
-            header={{height: 60}}
-            navbar={{width: 300, breakpoint: 'sm', collapsed: {mobile: !opened}}}
-            padding="md"
+        header={{ height: 60 }}
+        padding="md"
         >
             <AppShell.Header>
-                <Group h="100%" px="md">
-                    <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm"/>
-                </Group>
+                <Flex align='center' justify='space-between' h='100%'>
+                    <IconWorld/>
+                    <Autocomplete
+                    styles={{ wrapper: { width: 600 } }}
+                    radius="xl"
+                    placeholder="Search"
+                    leftSection={<IconSearch/>}
+                    data={['Project1', 'Project2', 'Project3', 'Project4']}
+                    />
+                    <IconUserCircle/>
+                </Flex>
             </AppShell.Header>
 
-            <AppShell.Navbar p="md">
-                <ScrollArea h={'100%'} type="never">
-                    <NavLink
-                        href="#required-for-focus"
-                        label="With icon"
-                        leftSection={<IconHome2 size="1rem" stroke={1.5}/>}
-                    />
-                </ScrollArea>
-
-            </AppShell.Navbar>
             <AppShell.Main>
-                <AppRichTextEditor/>
+                <Container>
+                    <Center>
+                        <Card shadow="sm" padding="lg" radius="md" withBorder>
+                            <Center>
+                                <Text fw={500}>
+                                    Start new project
+                                </Text>
+                            </Center>
+                            <Space h='md'/>
+                            <Card shadow="sm" radius="xs" withBorder>
+                                <Center><IconPlus/></Center>
+                            </Card>
+                            
+                            <Space h='md'/>
+                        </Card>
+                    </Center>
+                </Container>
+                <Divider my='md'/>
+                <FeaturesCards/>
             </AppShell.Main>
-            <AppShell.Aside>Aside</AppShell.Aside>
         </AppShell>
     );
 };
