@@ -6,7 +6,7 @@ import mkcert from "vite-plugin-mkcert";
 export default defineConfig({
   server: {
     https: true,
-    host: "localhost",
+    host: true,
     port: 443,
     strictPort: true,
   },
