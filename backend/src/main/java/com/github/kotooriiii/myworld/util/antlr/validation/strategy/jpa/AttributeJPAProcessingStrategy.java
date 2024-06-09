@@ -4,6 +4,6 @@ import com.github.kotooriiii.myworld.util.antlr.validation.command.jpa.JPAComman
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.AbstractStrategy;
 import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionJPAVisitorImpl;
 
-public abstract class AttributeJPAProcessingStrategy extends AbstractStrategy<ExpressionJPAVisitorImpl<?>, JPACommand>
+public abstract class AttributeJPAProcessingStrategy extends AbstractStrategy<ExpressionJPAVisitorImpl<?,?>, JPACommand>
 {
 }

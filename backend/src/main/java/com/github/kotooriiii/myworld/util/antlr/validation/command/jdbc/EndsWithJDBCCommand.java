@@ -13,7 +13,7 @@ public class EndsWithJDBCCommand extends JDBCCommand
     private static final EndsWithJDBCCommand instance = new EndsWithJDBCCommand();
 
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
 
         //Attribute

@@ -11,7 +11,7 @@ public class ConditionalExpression<T extends Comparable<? super T>> implements Q
     private final T value;
 
     @Override
-    public void accept(ExpressionVisitor<?,?> visitor) {
+    public void accept(ExpressionVisitor<?,?,?> visitor) {
         visitor.visit(this);
     }
 }

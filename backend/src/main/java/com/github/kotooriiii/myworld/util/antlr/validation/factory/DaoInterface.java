@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class DaoInterface<T extends AbstractStrategy<?,?>, M extends DaoResult, V extends ExpressionVisitor<?, ?>>
+public abstract class DaoInterface<T extends AbstractStrategy<?,?>, M extends DaoResult, V extends ExpressionVisitor<?, ?, ?>>
 {
 
     private final Map<String, T> attributeStrategyMap;

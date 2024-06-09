@@ -13,7 +13,7 @@ public class NotEqualJDBCCommand extends JDBCCommand
     private static final NotEqualJDBCCommand instance = new NotEqualJDBCCommand();
 
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
 
         //Attribute

@@ -22,7 +22,7 @@ public enum ConditionalOperator implements QueryExpression
     EW;
 
     @Override
-    public void accept(ExpressionVisitor<?,?> visitor) {
+    public void accept(ExpressionVisitor<?,?,?> visitor) {
         visitor.visit(this);
     }
 }

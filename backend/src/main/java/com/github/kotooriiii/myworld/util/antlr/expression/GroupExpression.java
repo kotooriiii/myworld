@@ -11,7 +11,7 @@ public class GroupExpression implements QueryExpression
     private final QueryExpression expression;
 
     @Override
-    public void accept(ExpressionVisitor<?,?> visitor) {
+    public void accept(ExpressionVisitor<?,?,?> visitor) {
         visitor.visit(this);
     }
 }

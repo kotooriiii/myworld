@@ -6,6 +6,7 @@ import com.github.kotooriiii.myworld.util.antlr.expression.ConditionalOperator;
 import com.github.kotooriiii.myworld.util.antlr.validation.command.jdbc.JDBCCommand;
 import com.github.kotooriiii.myworld.util.antlr.validation.fields.CollaboratorType;
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jdbc.AttributeJDBCProcessingStrategy;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectQEDefinition;
 import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionJDBCVisitorImpl;
 import org.apache.commons.lang3.EnumUtils;
 
@@ -19,21 +20,23 @@ public class ProjectCollaboratorJDBCStrategy extends AttributeJDBCProcessingStra
         return value instanceof String && EnumUtils.isValidEnum(CollaboratorType.class, ((String) value).toUpperCase());
     }
 
-    private <T extends Comparable<? super T>> String getStringBuilder(ExpressionJDBCVisitorImpl<?> visitor,
+    private <T extends Comparable<? super T>> String getStringBuilder(ExpressionJDBCVisitorImpl<?,?> visitor,
                                                                              ConditionalExpression<T> expression)
     {
         visitor.getInnerJoinBuilder().add("INNER JOIN " + "project_collaborators pc" + " ON " + "pc.project_id = id");
 
         CollaboratorType type = EnumUtils.getEnum(CollaboratorType.class, ((String) expression.getValue()).toUpperCase());
 
-        StringBuilder stringBuilder = new StringBuilder();
+        Object author_requester_id = visitor.getSpecFactory().getArgumentStep().getArgumentMap().get(ProjectQEDefinition.AUTHOR_REQUESTER_ID);
+
+        StringBuilder stringBuilder = new StringBuilder(" pc.author_id = '" + author_requester_id + "' AND ");
         return switch (type)
         {
             case SHARED  -> stringBuilder.append(" (pc.access_level = ").append(ProjectCollaborator.AccessLevel.EDITOR).append(" OR pc.access_level = ").append(ProjectCollaborator.AccessLevel.READ_ONLY).append(")").toString();
 
             case SELF -> stringBuilder.append(" (pc.access_level = ").append(ProjectCollaborator.AccessLevel.OWNER).append(")").toString();
 
-            case ALL -> stringBuilder.append("(TRUE)").toString();
+            case ALL -> stringBuilder.append(" (TRUE)").toString();
         };
     }
 
@@ -44,7 +47,7 @@ public class ProjectCollaboratorJDBCStrategy extends AttributeJDBCProcessingStra
         commandMap.put(ConditionalOperator.EQ, new JDBCCommand()
         {
             @Override
-            public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor,
+            public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor,
                                                                   ConditionalExpression<T> expression)
             {
                 visitor.getWhereClauseBuilder().append(getStringBuilder(visitor, expression));
@@ -54,7 +57,7 @@ public class ProjectCollaboratorJDBCStrategy extends AttributeJDBCProcessingStra
         commandMap.put(ConditionalOperator.NE, new JDBCCommand()
         {
             @Override
-            public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor,
+            public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor,
                                                                   ConditionalExpression<T> expression)
             {
                 visitor.getWhereClauseBuilder().append("NOT (").append(getStringBuilder(visitor, expression)).append(")");
