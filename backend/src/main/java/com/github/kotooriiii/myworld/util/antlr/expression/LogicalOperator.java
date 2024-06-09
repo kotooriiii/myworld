@@ -12,7 +12,7 @@ public enum LogicalOperator implements QueryExpression
     OR;
 
     @Override
-    public void accept(ExpressionVisitor<?,?> visitor)
+    public void accept(ExpressionVisitor<?,?,?> visitor)
     {
         visitor.visit(this);
     }

@@ -14,7 +14,7 @@ public class ContainsJPACommand extends JPACommand
     private static final ContainsJPACommand instance = new ContainsJPACommand();
 
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
         Predicate predicate = visitor.getCriteriaBuilder().like(
                 visitor.getRoot().get(expression.getAttribute()),

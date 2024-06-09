@@ -13,7 +13,7 @@ public class NotContainsJDBCCommand extends JDBCCommand
     private static final NotContainsJDBCCommand instance = new NotContainsJDBCCommand();
 
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
 
         //Attribute

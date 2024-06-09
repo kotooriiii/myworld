@@ -13,7 +13,7 @@ public class StartsWithJPACommand extends JPACommand
     @Getter(lazy = true)
     private static final StartsWithJPACommand instance = new StartsWithJPACommand();
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
         Predicate predicate = visitor.getCriteriaBuilder().like(
                 visitor.getRoot().get(expression.getAttribute()),

@@ -5,8 +5,9 @@ import com.github.kotooriiii.myworld.dao.ProjectDao;
 import com.github.kotooriiii.myworld.dao.jdbc.mapper.ProjectCollaboratorRowMapper;
 import com.github.kotooriiii.myworld.model.Project;
 import com.github.kotooriiii.myworld.model.ProjectCollaborator;
+import com.github.kotooriiii.myworld.util.antlr.validation.arguments.MyProject;
 import com.github.kotooriiii.myworld.util.antlr.validation.result.JDBCResult;
-import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectValidator;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectQEDefinition;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,7 +46,7 @@ public class ProjectJDBCDaoImpl implements ProjectDao
             SELECT projects.*
             FROM projects
             {innerJoin}
-            WHERE pc.author_id = :author_requester_id AND {whereClause}
+            WHERE {whereClause}
             LIMIT :limit
             OFFSET :offset
             """;
@@ -147,7 +148,6 @@ public class ProjectJDBCDaoImpl implements ProjectDao
 
 
     private final JdbcClient jdbcClient;
-    private final ProjectValidator projectValidator;
 
     @Override
     public void createProject(Project projectToCreate)
@@ -190,14 +190,12 @@ public class ProjectJDBCDaoImpl implements ProjectDao
 
         //Requirements
         Map<String, Object> map = new HashMap<>();
-        map.put("author_requester_id", authorRequesterId);
         map.put("limit", pageSize);
         map.put("offset", offset);
 
-        JDBCResult jdbcResult = projectValidator.withQueryExpression(filterQueryExpression).buildJDBC();
+        JDBCResult jdbcResult =  new MyProject().withAuthorRequesterId(authorRequesterId).step().withQueryExpression(filterQueryExpression).buildJDBC();
 
         map.putAll(jdbcResult.valueMap());
-
 
         Map<String, String> values = new HashMap<>();
         values.put("innerJoin", jdbcResult.innerJoin());

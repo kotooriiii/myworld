@@ -8,6 +8,7 @@ import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jpa.Attribut
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jpa.impl.DefaultBooleanAttributeJPAProcessingStrategy;
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jpa.impl.DefaultNumberOrTimeAttributeJPAProcessingStrategy;
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jpa.impl.DefaultStringAttributeJPAProcessingStrategy;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.BaseQEDefinition;
 import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionJPAVisitorImpl;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,10 +20,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class JPADao<U extends GenericModel> extends DaoInterface<AttributeJPAProcessingStrategy, JPAResult<U>, ExpressionJPAVisitorImpl<U>>
+public class JPADao<U extends GenericModel> extends DaoInterface<AttributeJPAProcessingStrategy, JPAResult<U>, ExpressionJPAVisitorImpl<U, ?>>
 {
     @Override
-    public void processWithDefaultMappings(ExpressionJPAVisitorImpl<U> visitor, Set<String> visitedAttributes)
+    public void processWithDefaultMappings(ExpressionJPAVisitorImpl<U, ?> visitor, Set<String> visitedAttributes)
     {
         Map<String, JPAResult<U>> defaultAttributeQueryExpressionMap = this.getDefaultAttributeQueryExpressionMap();
         Set<String> defaultsRequiredToBeProcessedSet = new HashSet<>(defaultAttributeQueryExpressionMap.keySet());

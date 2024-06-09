@@ -3,7 +3,7 @@ package com.github.kotooriiii.myworld.util.antlr.validation.command.jdbc;
 import com.github.kotooriiii.myworld.util.antlr.validation.command.Command;
 import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionJDBCVisitorImpl;
 
-public abstract class JDBCCommand implements Command<ExpressionJDBCVisitorImpl<?>>
+public abstract class JDBCCommand implements Command<ExpressionJDBCVisitorImpl<?,?>>
 {
 
     public String getSanitizedStringOfKey(String key)

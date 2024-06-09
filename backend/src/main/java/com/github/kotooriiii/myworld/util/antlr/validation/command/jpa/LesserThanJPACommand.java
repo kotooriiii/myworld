@@ -13,7 +13,7 @@ public class LesserThanJPACommand extends JPACommand
     @Getter(lazy = true)
     private static final LesserThanJPACommand instance = new LesserThanJPACommand();
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
         Predicate predicate = visitor.getCriteriaBuilder().lessThan(visitor.getRoot().get(expression.getAttribute()), expression.getValue());
         visitor.getPredicateStack().push(predicate);
