@@ -2,20 +2,21 @@ package com.github.kotooriiii.myworld.util.antlr.validation.visitor;
 
 import com.github.kotooriiii.myworld.model.GenericModel;
 import com.github.kotooriiii.myworld.util.antlr.expression.*;
+import com.github.kotooriiii.myworld.util.antlr.validation.factory.SpecFactory;
 import com.github.kotooriiii.myworld.util.antlr.validation.result.JDBCResult;
-import com.github.kotooriiii.myworld.util.antlr.validation.validator.AttributeValidator;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.BaseQEDefinition;
 
 import java.util.*;
 
-public class ExpressionJDBCVisitorImpl<U extends GenericModel> extends ExpressionVisitor<U,JDBCResult>
+public class ExpressionJDBCVisitorImpl<U extends GenericModel, D extends BaseQEDefinition<U>> extends ExpressionVisitor<U, D, JDBCResult>
 {
     private final StringBuilder whereClauseBuilder;
     private final LinkedHashSet<String> innerJoinBuilder;
     private final Map<String, Object> valueMap;
 
-    public ExpressionJDBCVisitorImpl(QueryExpression queryExpression, AttributeValidator<U> attributeValidator)
+    public ExpressionJDBCVisitorImpl(SpecFactory<U,D> udSpecFactory)
     {
-        super(attributeValidator, queryExpression);
+        super(udSpecFactory);
         whereClauseBuilder = new StringBuilder();
         innerJoinBuilder = new LinkedHashSet<>();
         valueMap = new HashMap<>();
@@ -25,8 +26,8 @@ public class ExpressionJDBCVisitorImpl<U extends GenericModel> extends Expressio
     public <T extends Comparable<? super T>> void visit(ConditionalExpression<T> expression)
     {
         
-        this.attributeValidator.withJDBC().checkExpressionValidOrThrow(expression);
-        this.attributeValidator.withJDBC().getProcessingStrategy(expression.getAttribute()).process(this, expression);
+        this.specFactory.getBaseQEDefinition().withJDBC().checkExpressionValidOrThrow(expression);
+        this.specFactory.getBaseQEDefinition().withJDBC().getProcessingStrategy(expression.getAttribute()).process(this, expression);
         visitedAttributes.add(expression.getAttribute());
 
     }
@@ -92,12 +93,12 @@ public class ExpressionJDBCVisitorImpl<U extends GenericModel> extends Expressio
     {
         whereClauseBuilder.append("(");
         whereClauseBuilder.append(' ');
-        queryExpression.accept(this);
+        this.specFactory.getQueryExpression().accept(this);
         whereClauseBuilder.append(' ');
 
         if(!isDefaultAttribute)
         {
-            this.attributeValidator.withJDBC().processWithDefaultMappings(this, visitedAttributes);
+            this.specFactory.getBaseQEDefinition().withJDBC().processWithDefaultMappings(this, visitedAttributes);
             whereClauseBuilder.append(' ');
         }
 

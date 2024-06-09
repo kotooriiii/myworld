@@ -3,12 +3,16 @@ package com.github.kotooriiii.myworld.dao.jpa;
 import com.github.kotooriiii.myworld.dao.jpa.repository.AuthorRepository;
 import com.github.kotooriiii.myworld.dao.jpa.repository.ProjectCollaboratorRepository;
 import com.github.kotooriiii.myworld.dao.jpa.repository.ProjectRepository;
+import com.github.kotooriiii.myworld.model.Author;
 import com.github.kotooriiii.myworld.util.antlr.expression.QueryExpression;
 import com.github.kotooriiii.myworld.dao.ProjectDao;
 import com.github.kotooriiii.myworld.model.Project;
 import com.github.kotooriiii.myworld.model.ProjectCollaborator;
+import com.github.kotooriiii.myworld.util.antlr.validation.arguments.MyProject;
 import com.github.kotooriiii.myworld.util.antlr.validation.result.JPAResult;
-import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectValidator;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectQEDefinition;
+import jakarta.persistence.criteria.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +23,12 @@ import java.util.*;
 
 @Repository
 @Qualifier("jpa")
+@RequiredArgsConstructor
 public class ProjectJPADaoImpl implements ProjectDao {
 
-    private ProjectRepository projectRepository;
-    private ProjectCollaboratorRepository projectCollaboratorRepository;
-    private AuthorRepository authorRepository;
-    private ProjectValidator projectValidator;
+    private final ProjectRepository projectRepository;
+    private final ProjectCollaboratorRepository projectCollaboratorRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
     public void createProject(Project projectToCreate) {
@@ -47,11 +51,9 @@ public class ProjectJPADaoImpl implements ProjectDao {
 
     @Override
     public Page<Project> selectProjectsByPage(Pageable pageable, QueryExpression filterQueryExpression, UUID authorRequesterId) {
-        JPAResult<Project> jpaResult = projectValidator.withQueryExpression(filterQueryExpression).buildJPA();
+        JPAResult<Project> jpaResult = new MyProject().withAuthorRequesterId(authorRequesterId).step().withQueryExpression(filterQueryExpression).buildJPA();
 
-        Specification<Project> specification = jpaResult.specification();
-
-        return projectRepository.findAll(specification, pageable);
+        return projectRepository.findAll(jpaResult.specification(), pageable);
     }
 
     @Override

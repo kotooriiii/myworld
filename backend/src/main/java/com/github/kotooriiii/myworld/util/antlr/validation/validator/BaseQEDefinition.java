@@ -4,6 +4,7 @@ import com.github.kotooriiii.myworld.model.GenericModel;
 import com.github.kotooriiii.myworld.util.antlr.exception.FieldNotFoundException;
 import com.github.kotooriiii.myworld.util.antlr.expression.QueryExpression;
 import com.github.kotooriiii.myworld.util.antlr.util.ExpressionUtils;
+import com.github.kotooriiii.myworld.util.antlr.validation.arguments.MyProject;
 import com.github.kotooriiii.myworld.util.antlr.validation.factory.JDBCDao;
 import com.github.kotooriiii.myworld.util.antlr.validation.factory.JPADao;
 import com.github.kotooriiii.myworld.util.antlr.validation.factory.SpecFactory;
@@ -19,54 +20,50 @@ import com.github.kotooriiii.myworld.util.antlr.validation.strategy.jpa.impl.Def
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-public abstract class AttributeValidator<U extends GenericModel>
+public abstract class BaseQEDefinition<U extends GenericModel>
 {
     private final Class<U> clazz;
     private final JPADao<U> jpaDao;
     private final JDBCDao<U> jdbcDao;
+    private final Map<String, String> defaultAttributeMap;
+    private final Set<String> requiredArguments;
 
-    public AttributeValidator(Class<U> clazz)
+    public BaseQEDefinition(Class<U> clazz)
     {
         this.clazz = clazz;
 
         jpaDao = new JPADao<>();
         jdbcDao = new JDBCDao<>();
+        defaultAttributeMap = new HashMap<>();
+        requiredArguments = new HashSet<>();
 
         addJPAAttributes(jpaDao.getAttributeStrategyMap());
         addJDBCAttributes(jdbcDao.getAttributeStrategyMap());
-
-        Map<String,String> defaultAttributeMap = new HashMap<>();
+        addRequiredArguments(requiredArguments);
         addDefaultQueryExpression(defaultAttributeMap);
-
-        defaultAttributeMap.forEach((s, s2) -> {
-            SpecFactory<U> uSpecFactory = withDefaultAttributeQueryExpression(ExpressionUtils.getFilterQueryExpression(s2));
-            jpaDao.addDefaultAttributeMapping(s, uSpecFactory.buildJPA());
-            jdbcDao.addDefaultAttributeMapping(s, uSpecFactory.buildJDBC());
-        });
     }
 
     abstract void addJPAAttributes(Map<String, AttributeJPAProcessingStrategy> validAttributes);
+
     abstract void addJDBCAttributes(Map<String, AttributeJDBCProcessingStrategy> validAttributes);
+    abstract void addRequiredArguments(Set<String> requiredArguments);
+
+
 
     abstract void addDefaultQueryExpression(Map<String, String> defaultAttributeMap);
 
 
-
-    public SpecFactory<U> withQueryExpression(QueryExpression queryExpression)
+    public Set<String> getRequiredArguments()
     {
-        return SpecFactory.createInstance(queryExpression, this);
+        return requiredArguments;
     }
 
-    private SpecFactory<U> withDefaultAttributeQueryExpression(QueryExpression queryExpression)
+    public Map<String, String> getDefaultAttributeMap()
     {
-        return SpecFactory.createInstance(queryExpression, this, true);
+        return defaultAttributeMap;
     }
-
-
 
     public JPADao<U> withJPA()
     {
@@ -139,7 +136,6 @@ public abstract class AttributeValidator<U extends GenericModel>
         }
 
     }
-
 
 
 }

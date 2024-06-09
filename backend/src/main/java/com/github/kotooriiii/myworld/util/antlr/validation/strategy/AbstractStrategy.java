@@ -8,7 +8,7 @@ import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionVis
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractStrategy<V extends ExpressionVisitor<?,?>, C extends Command<V>>
+public abstract class AbstractStrategy<V extends ExpressionVisitor<?,?,?>, C extends Command<V>>
 {
     private final Map<ConditionalOperator, C> commandMap;
 

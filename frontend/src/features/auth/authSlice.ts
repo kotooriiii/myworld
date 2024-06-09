@@ -183,6 +183,8 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
+                localStorage.setItem('token', action.payload.token);
+
             })
             .addCase(register.rejected, (state, action) =>
             {
