@@ -2,7 +2,7 @@ package com.github.kotooriiii.myworld;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public class AbstractDatabaseContainerBaseTest
+public class AbstractDatabaseContainerBaseTest extends AbstractBaseTest
 {
     protected static final PostgreSQLContainer<?> postgres;
 

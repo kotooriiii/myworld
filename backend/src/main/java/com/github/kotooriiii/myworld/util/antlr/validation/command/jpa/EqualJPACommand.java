@@ -13,7 +13,7 @@ public class EqualJPACommand extends JPACommand
     @Getter(lazy = true)
     private static final EqualJPACommand instance = new EqualJPACommand();
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJPAVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
         Predicate predicate = visitor.getCriteriaBuilder().equal(visitor.getRoot().get(expression.getAttribute()), expression.getValue());
         visitor.getPredicateStack().push(predicate);

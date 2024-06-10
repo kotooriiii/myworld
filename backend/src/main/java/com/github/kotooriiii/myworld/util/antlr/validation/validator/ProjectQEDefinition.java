@@ -10,14 +10,23 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-@Component
-public class ProjectValidator extends AttributeValidator<Project>
+public class ProjectQEDefinition extends BaseQEDefinition<Project>
 {
-    public ProjectValidator() {
+    private static ProjectQEDefinition INSTANCE = null;
+
+    public final static String AUTHOR_REQUESTER_ID = "author_requester_id";
+    private ProjectQEDefinition() {
         super(Project.class);
     }
+    public static synchronized ProjectQEDefinition getInstance()
+    {
+        if (INSTANCE == null)
+            INSTANCE = new ProjectQEDefinition();
 
+        return INSTANCE;
+    }
     @Override
     void addJPAAttributes(Map<String, AttributeJPAProcessingStrategy> validAttributes)
     {
@@ -44,10 +53,19 @@ public class ProjectValidator extends AttributeValidator<Project>
     }
 
     @Override
+    void addRequiredArguments(Set<String> validAttributes)
+    {
+        validAttributes.add(AUTHOR_REQUESTER_ID);
+    }
+
+    @Override
     void addDefaultQueryExpression(Map<String, String> defaultAttributeMap)
     {
         defaultAttributeMap.put("collaboratorType", "collaboratorType eq \"ALL\"");
     }
 
-
+    public String getAuthorRequesterIdKey()
+    {
+        return AUTHOR_REQUESTER_ID;
+    }
 }

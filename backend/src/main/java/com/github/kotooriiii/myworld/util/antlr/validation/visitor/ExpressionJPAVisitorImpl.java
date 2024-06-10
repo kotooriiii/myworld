@@ -2,8 +2,9 @@ package com.github.kotooriiii.myworld.util.antlr.validation.visitor;
 
 import com.github.kotooriiii.myworld.model.GenericModel;
 import com.github.kotooriiii.myworld.util.antlr.expression.*;
+import com.github.kotooriiii.myworld.util.antlr.validation.factory.SpecFactory;
 import com.github.kotooriiii.myworld.util.antlr.validation.result.JPAResult;
-import com.github.kotooriiii.myworld.util.antlr.validation.validator.AttributeValidator;
+import com.github.kotooriiii.myworld.util.antlr.validation.validator.BaseQEDefinition;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -14,7 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Stack;
 
 @Getter
-public class ExpressionJPAVisitorImpl<U extends GenericModel> extends ExpressionVisitor<U, JPAResult<U>>
+public class ExpressionJPAVisitorImpl<U extends GenericModel, D extends BaseQEDefinition<U>> extends ExpressionVisitor<U, D, JPAResult<U>>
 {
 
     private Root<U> root;
@@ -26,16 +27,17 @@ public class ExpressionJPAVisitorImpl<U extends GenericModel> extends Expression
 
     private final Stack<Predicate> predicateStack;
 
-    public ExpressionJPAVisitorImpl(QueryExpression queryExpression, AttributeValidator<U> attributeValidator)
+    public ExpressionJPAVisitorImpl(SpecFactory<U,D> udSpecFactory)
     {
-        super(attributeValidator, queryExpression);
+        super(udSpecFactory);
         predicateStack = new Stack<>();
     }
+
     @Override
     public <T extends Comparable<? super T>> void visit(ConditionalExpression<T> expression)
     {
-        this.attributeValidator.withJPA().checkExpressionValidOrThrow(expression);
-        this.attributeValidator.withJPA().getProcessingStrategy(expression.getAttribute()).process(this, expression);
+        this.specFactory.getBaseQEDefinition().withJPA().checkExpressionValidOrThrow(expression);
+        this.specFactory.getBaseQEDefinition().withJPA().getProcessingStrategy(expression.getAttribute()).process(this, expression);
         visitedAttributes.add(expression.getAttribute());
 
     }
@@ -88,7 +90,7 @@ public class ExpressionJPAVisitorImpl<U extends GenericModel> extends Expression
                     ExpressionJPAVisitorImpl.this.root = root;
                     ExpressionJPAVisitorImpl.this.criteriaQuery = query;
                     ExpressionJPAVisitorImpl.this.criteriaBuilder = criteriaBuilder;
-                    ExpressionJPAVisitorImpl.this.queryExpression.accept(ExpressionJPAVisitorImpl.this);
+                    ExpressionJPAVisitorImpl.this.specFactory.getQueryExpression().accept(ExpressionJPAVisitorImpl.this);
 
                     if(isNoOp())
                         predicateStack.push(criteriaBuilder.and()); //always true statement! in case, no-op
@@ -100,7 +102,7 @@ public class ExpressionJPAVisitorImpl<U extends GenericModel> extends Expression
 
         if(!isDefaultAttribute)
         {
-            this.attributeValidator.withJPA().processWithDefaultMappings(this, visitedAttributes); //sets final spec here
+            this.specFactory.getBaseQEDefinition().withJPA().processWithDefaultMappings(this, visitedAttributes); //sets final spec here
         }
         else
         {

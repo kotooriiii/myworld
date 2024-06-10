@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class NoOpExpression implements QueryExpression
 {
     @Override
-    public void accept(ExpressionVisitor<?,?> visitor) {
+    public void accept(ExpressionVisitor<?,?,?> visitor) {
         visitor.visit(this);
     }
 }

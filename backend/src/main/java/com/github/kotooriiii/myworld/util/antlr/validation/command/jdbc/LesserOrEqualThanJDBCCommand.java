@@ -13,7 +13,7 @@ public class LesserOrEqualThanJDBCCommand extends JDBCCommand
     private static final LesserOrEqualThanJDBCCommand instance = new LesserOrEqualThanJDBCCommand();
 
     @Override
-    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?> visitor, ConditionalExpression<T> expression)
+    public <T extends Comparable<? super T>> void execute(ExpressionJDBCVisitorImpl<?,?> visitor, ConditionalExpression<T> expression)
     {
 
         //Attribute

@@ -55,7 +55,7 @@ public class OAuthController
         RestClient restClient = RestClient.create();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
+        params.add("grant_type", "authorization_code"); //todo shouldnt we get the ID token instead?
         params.add("code", authorizationCode);
         params.add("redirect_uri", "https://localhost/callback");
         params.add("client_id", clientId);

@@ -7,9 +7,9 @@ import com.github.kotooriiii.myworld.enums.Gender;
 import com.github.kotooriiii.myworld.model.Author;
 import com.github.kotooriiii.myworld.model.Project;
 import com.github.kotooriiii.myworld.model.ProjectCollaborator;
+import com.github.kotooriiii.myworld.util.antlr.exception.BadRequestException;
 import com.github.kotooriiii.myworld.util.antlr.expression.QueryExpression;
 import com.github.kotooriiii.myworld.util.antlr.util.ExpressionUtils;
-import com.github.kotooriiii.myworld.util.antlr.validation.validator.ProjectValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.stream.Streams;
 import org.junit.jupiter.api.*;
@@ -48,8 +48,6 @@ public class ProjectValidatorTest extends AbstractDatabaseContainerBaseTest
     {
     }
 
-    @Autowired
-    private ProjectValidator projectValidator;
 
     @Autowired
     @Qualifier("jdbc")
@@ -187,8 +185,8 @@ public class ProjectValidatorTest extends AbstractDatabaseContainerBaseTest
         projectDao.addCollaboratorByProjectIdAndByAuthorId(pA.getId(), authorMap.get("Jessica Smolder").getId(), ProjectCollaborator.AccessLevel.EDITOR);
 
         // Add collaborator to pB
-        projectDao.addCollaboratorByProjectIdAndByAuthorId(pA.getId(), authorMap.get("Bob Hwei").getId(), ProjectCollaborator.AccessLevel.EDITOR);
-        projectDao.addCollaboratorByProjectIdAndByAuthorId(pA.getId(), authorMap.get("Jessica Smolder").getId(), ProjectCollaborator.AccessLevel.EDITOR);
+        projectDao.addCollaboratorByProjectIdAndByAuthorId(pB.getId(), authorMap.get("Bob Hwei").getId(), ProjectCollaborator.AccessLevel.EDITOR);
+        projectDao.addCollaboratorByProjectIdAndByAuthorId(pB.getId(), authorMap.get("Jessica Smolder").getId(), ProjectCollaborator.AccessLevel.EDITOR);
 
 
         //Goals
@@ -356,12 +354,8 @@ public class ProjectValidatorTest extends AbstractDatabaseContainerBaseTest
     @MethodSource("implementations")
     void testSelectProjectsByPage_shouldThrowException_whenFilterQueryIsInvalid(DaoTestingContainer daoTestingContainer)
     {
-        // Arrange
-        QueryExpression filterQueryExpression = ExpressionUtils.getFilterQueryExpression("invalid query");
-        Pageable pageable = Pageable.ofSize(1000).withPage(0);
-
         // Act and Assert
-        Assertions.assertThrows(Exception.class, () -> daoTestingContainer.projectDao.selectProjectsByPage(pageable, filterQueryExpression, authorMap.get("Leah Nyoomnugget").getId()));
+        Assertions.assertThrows(BadRequestException.class, () -> ExpressionUtils.getFilterQueryExpression("invalid query"));
     }
 
 
@@ -387,7 +381,7 @@ public class ProjectValidatorTest extends AbstractDatabaseContainerBaseTest
 
         // Assert
         Assertions.assertEquals(1, projects.getSize());
-        Assertions.assertEquals(2, projects.getNumber());
+        Assertions.assertEquals(2, projects.getTotalElements());
         Assertions.assertEquals(2, projects.getTotalPages());
     }
 }

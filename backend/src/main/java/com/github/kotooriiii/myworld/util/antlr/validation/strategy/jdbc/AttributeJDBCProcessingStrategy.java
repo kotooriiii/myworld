@@ -4,6 +4,6 @@ import com.github.kotooriiii.myworld.util.antlr.validation.command.jdbc.JDBCComm
 import com.github.kotooriiii.myworld.util.antlr.validation.strategy.AbstractStrategy;
 import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionJDBCVisitorImpl;
 
-public abstract class AttributeJDBCProcessingStrategy extends AbstractStrategy<ExpressionJDBCVisitorImpl<?>, JDBCCommand>
+public abstract class AttributeJDBCProcessingStrategy extends AbstractStrategy<ExpressionJDBCVisitorImpl<?,?>, JDBCCommand>
 {
 }

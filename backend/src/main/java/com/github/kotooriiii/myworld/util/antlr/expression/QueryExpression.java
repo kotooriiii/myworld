@@ -4,5 +4,5 @@ import com.github.kotooriiii.myworld.util.antlr.validation.visitor.ExpressionVis
 
 public interface QueryExpression
 {
-    public abstract void accept(ExpressionVisitor<?, ?> visitor);
+    public abstract void accept(ExpressionVisitor<?, ?, ?> visitor);
 }

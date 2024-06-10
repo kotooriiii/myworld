@@ -3,6 +3,7 @@ package com.github.kotooriiii.myworld.dao.jpa;
 import com.github.kotooriiii.myworld.dao.AuthorDao;
 import com.github.kotooriiii.myworld.dao.jpa.repository.AuthorRepository;
 import com.github.kotooriiii.myworld.model.Author;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@RequiredArgsConstructor
 @Qualifier("jpa")
 public class AuthorJPADaoImpl implements AuthorDao
 {
     private final AuthorRepository authorRepository;
-
-    public AuthorJPADaoImpl(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
 
     @Override
     public Author createAuthor(Author authorToCreate)
