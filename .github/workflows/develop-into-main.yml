@@ -1,4 +1,5 @@
 name: Develop into Main
+
 on: 
   workflow_dispatch:
   schedule:
@@ -8,15 +9,25 @@ jobs:
   merge-develop-to-main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set Git config
-      run: |
+      - uses: actions/checkout@v2
+      
+      - name: Set Git config
+        run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-    - name: Merge develop into main
-      run: |
+      
+      - name: Build and Test (Develop)
+        run: |
+          git checkout develop
+          # Add commands here to build and test your project
+          # For example, if you're using Maven:
+          mvn clean test
+          
+      - name: Merge develop into main
+        if: success() # Only run if previous steps (build and test) were successful
+        run: |
           git fetch --unshallow
           git checkout main
           git pull
-          git merge --no-ff origin/develop -m "Auto-merge develop into master"
+          git merge --no-ff origin/develop -m "Auto-merge develop into main"
           git push
