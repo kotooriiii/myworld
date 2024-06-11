@@ -17,11 +17,11 @@ jobs:
           git config --local user.name "Github Actions"
       - name: Fetch develop branch
         run: git fetch origin develop:develop
+      - name: Change to backend directory
+        run: cd backend
       - name: Build and Test (Develop)
         run: |
           git checkout develop
-          # Add commands here to build and test your project
-          # For example, if you're using Maven:
           mvn clean test
           
       - name: Merge develop into main
