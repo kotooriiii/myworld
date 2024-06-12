@@ -18,11 +18,10 @@ jobs:
         run: git fetch origin develop:develop
       - name: Change to backend directory
         run: cd backend
-      - name: List directory
-        run: ls -lrta
       - name: Build and Test (Develop)
         run: |
           git checkout develop
+          ls -lrta
           mvn clean test
           
       - name: Merge develop into main
