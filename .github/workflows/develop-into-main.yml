@@ -22,6 +22,10 @@ jobs:
           git config --local user.name "Github Actions"
       - name: Fetch develop branch
         run: git fetch origin develop:develop
+      - name: Create .env file from secret
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.SECRETS_CONFIG }}" > ./src/main/resources/environment/secrets.env
       - name: Build and Test (Develop)
         working-directory: ./backend
         run: |
