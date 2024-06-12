@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
       - name: Set Git config
         run: |
           git config --local user.email "actions@github.com"
@@ -19,6 +18,8 @@ jobs:
         run: git fetch origin develop:develop
       - name: Change to backend directory
         run: cd backend
+      - name: List directory
+        run: ls -lrta
       - name: Build and Test (Develop)
         run: |
           git checkout develop
