@@ -16,14 +16,11 @@ jobs:
           git config --local user.name "Github Actions"
       - name: Fetch develop branch
         run: git fetch origin develop:develop
-      - name: Change to backend directory
-        run: cd backend
       - name: Build and Test (Develop)
+        working-directory: ./backend
         run: |
           git checkout develop
-          ls -lrta
           mvn clean test
-          
       - name: Merge develop into main
         if: success() # Only run if previous steps (build and test) were successful
         run: |
