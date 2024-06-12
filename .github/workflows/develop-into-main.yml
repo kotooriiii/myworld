@@ -27,16 +27,10 @@ jobs:
         working-directory: ./backend
         run: |
           echo "${{ secrets.SECRETS_CONFIG }}" > ./src/main/resources/environment/secrets.env
-          ls ./src/main/resources/environment/
-          cat ./src/main/resources/environment/secrets.env
       - name: Build and Test (Develop)
         working-directory: ./backend
         run: |
-          ls ./src/main/resources/environment/
-          cat ./src/main/resources/environment/secrets.env
           git checkout develop
-          ls ./src/main/resources/environment/
-          cat ./src/main/resources/environment/secrets.env
           mvn clean test
       - name: Merge develop into main
         if: success() # Only run if previous steps (build and test) were successful
