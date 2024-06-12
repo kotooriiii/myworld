@@ -1,4 +1,5 @@
 name: Develop into Main
+
 on: 
   workflow_dispatch:
   schedule:
@@ -6,17 +7,36 @@ on:
 
 jobs:
   merge-develop-to-main:
+    environment: MyWorld   
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set Git config
-      run: |
+      - name: Standard Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'  # You can use 'zulu' or other distributions if preferred
+          java-version: '21'
+      - name: Set Git config
+        run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-    - name: Merge develop into main
-      run: |
+      - name: Fetch develop branch
+        run: git fetch origin develop:develop
+      - name: Create .env file from secret
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.SECRETS_CONFIG }}" > ./src/main/resources/environment/secrets.env
+      - name: Build and Test (Develop)
+        working-directory: ./backend
+        run: |
+          git checkout develop
+          mvn clean test
+      - name: Merge develop into main
+        if: success() # Only run if previous steps (build and test) were successful
+        run: |
           git fetch --unshallow
           git checkout main
           git pull
-          git merge --no-ff origin/develop -m "Auto-merge develop into master"
+          git merge --no-ff origin/develop -m "Auto-merge develop into main"
           git push
