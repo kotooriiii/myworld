@@ -9,7 +9,13 @@ jobs:
   merge-develop-to-main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Standard Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'  # You can use 'zulu' or other distributions if preferred
+          java-version: '21'
       - name: Set Git config
         run: |
           git config --local user.email "actions@github.com"
