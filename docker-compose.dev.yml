@@ -1,14 +1,14 @@
 services:
   db:
-    container_name: myworld_postgres
+    container_name: myworld_postgres_dev
     image: postgres:16.2
     environment:
       POSTGRES_DB: myworld
-      POSTGRES_USER: myworld_admin
-      POSTGRES_PASSWORD: myworld_admin_pw_123
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /data/postgres
     volumes:
-      - db:/data/postgres
+      - db-dev:/data/postgres
     ports:
       - "5332:5432"
     networks:
@@ -20,4 +20,4 @@ networks:
     driver: bridge
 
 volumes:
-  db:
+  db-dev:

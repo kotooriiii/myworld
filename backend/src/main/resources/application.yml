@@ -24,8 +24,8 @@ management:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5332/myworld
-    username: myworld_admin
-    password: myworld_admin_pw_123
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -60,5 +60,5 @@ spring:
 flyway:
   url: jdbc:postgresql://localhost:5332/myworld
   schemas: myworld
-  user: "myworld_admin"
-  password: "myworld_admin_pw_123"
+  user: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
