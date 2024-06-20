@@ -4,7 +4,7 @@ CREATE TABLE authors
 
     name          TEXT NOT NULL,
     email         TEXT NOT NULL UNIQUE,
-    password      TEXT,
+    password      TEXT NOT NULL,
     gender        TEXT,
     birth_date    DATE,
 
