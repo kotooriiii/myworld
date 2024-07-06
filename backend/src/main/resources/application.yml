@@ -20,7 +20,28 @@ management:
     web:
       exposure:
         include: "health,info"
-
+oidc:
+  providers:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
+      token-uri: https://oauth2.googleapis.com/token
+      jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+      peoples-uri: https://people.googleapis.com/v1/people/me
+    apple:
+      client-id: x
+      client-secret: x
+      token-uri: x
+      jwk-set-uri: x
+      peoples-uri: x
+    microsoft:
+      client-id: ${MICROSOFT_CLIENT_ID}
+      client-secret: ${MICROSOFT_CLIENT_SECRET}
+      tenant-id: ${MICROSOFT_TENANT_ID}
+      token-uri: https://login.microsoftonline.com/consumers/oauth2/v2.0/token
+      jwk-set-uri: https://login.microsoftonline.com/consumers/discovery/v2.0/keys
+      profile-uri: https://graph.microsoft.com/beta/me/profile
+      photo-uri: https://graph.microsoft.com/v1.0/me/photo/$value
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5332/myworld
@@ -43,20 +64,7 @@ spring:
   codec:
     max-in-memory-size: 10MB
   security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: openid,profile,email
-            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
-            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
 flyway:
   url: jdbc:postgresql://localhost:5332/myworld
   schemas: myworld

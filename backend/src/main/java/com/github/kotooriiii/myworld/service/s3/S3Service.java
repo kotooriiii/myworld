@@ -22,17 +22,21 @@ public class S3Service
         this.s3Client = s3Client;
     }
 
-    public void putObject(String bucketName, String key, byte[] file)
+    public record S3ObjectResponse(byte[] objectData, String contentType) {
+    }
+
+    public void putObject(String bucketName, String key, byte[] file, String fileExtension)
     {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
+                .contentType(fileExtension)
                 .key(key)
                 .build();
 
         s3Client.putObject(objectRequest, RequestBody.fromBytes(file));
     }
 
-    public byte[] getObject(String bucketName, String keyName)
+    public S3ObjectResponse getObject(String bucketName, String keyName)
     {
         GetObjectRequest objectRequest = GetObjectRequest
                 .builder()
@@ -41,7 +45,10 @@ public class S3Service
                 .build();
         try(ResponseInputStream<GetObjectResponse> response = s3Client.getObject(objectRequest))
         {
-            return response.readAllBytes();
+            GetObjectResponse objectResponse  = response.response();
+
+            return new S3ObjectResponse(response.readAllBytes(), objectResponse.contentType());
+
         } catch (IOException e)
         {
             throw new RuntimeException(e);

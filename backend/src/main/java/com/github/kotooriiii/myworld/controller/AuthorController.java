@@ -3,9 +3,8 @@ package com.github.kotooriiii.myworld.controller;
 import com.github.kotooriiii.myworld.dto.AuthorDTO;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorRegistrationRequest;
 import com.github.kotooriiii.myworld.dto.request.author.AuthorUpdateRequest;
-import com.github.kotooriiii.myworld.dto.response.auth.AuthenticationResponse;
-import com.github.kotooriiii.myworld.model.Author;
 import com.github.kotooriiii.myworld.service.AuthorService;
+import com.github.kotooriiii.myworld.service.s3.S3Service;
 import com.github.kotooriiii.myworld.service.security.jwt.JWTUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -93,7 +92,13 @@ public class AuthorController
     public void uploadAuthorProfileImage(@PathVariable("authorId") UUID authorId, @RequestParam("file")
     MultipartFile file)
     {
-        authorService.uploadAuthorProfileImage(authorId, file);
+        try
+        {
+            authorService.uploadAuthorProfileImage(authorId, file.getBytes(), file.getContentType());
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @DeleteMapping("{authorId}")
@@ -104,9 +109,13 @@ public class AuthorController
     }
 
 
-    @GetMapping(value = "{authorId}/profile-image", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] getAuthorProfileImage(@PathVariable("authorId") UUID authorId)
+    @GetMapping(value = "{authorId}/profile-image")
+    public ResponseEntity<byte[]> getAuthorProfileImage(@PathVariable("authorId") UUID authorId)
     {
-        return authorService.getAuthorProfileImage(authorId);
+        S3Service.S3ObjectResponse authorProfileImage = authorService.getAuthorProfileImage(authorId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, authorProfileImage.contentType())
+                .body(authorProfileImage.objectData());
     }
 }

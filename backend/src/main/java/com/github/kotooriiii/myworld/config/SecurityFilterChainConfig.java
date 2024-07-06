@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -40,44 +41,43 @@ public class SecurityFilterChainConfig
             throws Exception
     {
         http
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource))
-                .authorizeHttpRequests()
-                .requestMatchers(
-                        HttpMethod.POST,
-                        "/api/v1/authors",
-                        "/api/v1/auth/login",
-                        "/login/**",
-                        "/authenticate"
-                )
-                .permitAll()
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/ping",
-                        "/api/v1/authors/*/profile-image",
-                        "/oauth2/**",
-                        "/login/**"
-                )
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/actuator/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                {
+                    authorizationManagerRequestMatcherRegistry.requestMatchers(
+                            HttpMethod.POST,
+                            "/api/v1/authors",
+                            "/api/v1/auth/login",
+                            "/login/**",
+                            "/authenticate"
+                    ).permitAll();
+
+                    authorizationManagerRequestMatcherRegistry.requestMatchers(
+                            HttpMethod.GET,
+                            "/ping",
+                            "/api/v1/authors/*/profile-image",
+                            "/oauth2/**",
+                            "/login/**"
+                    ).permitAll();
+
+                    authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll();
+
+                    authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
+
+                }).sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-                .oauth2Login(Customizer.withDefaults())
-                .httpBasic() // Enable Basic Authentication
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-        ;
+                .httpBasic(httpSecurityHttpBasicConfigurer ->
+                {
+                })
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                {
+                    httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(authenticationEntryPoint);
+                });
         return http.build();
     }
 

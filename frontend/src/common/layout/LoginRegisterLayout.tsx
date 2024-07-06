@@ -14,7 +14,7 @@ export const LoginRegisterLayout = ({children}: LoginRegisterLayoutProps) =>
             padding="md"
         >
             <AppShell.Main>
-                <Container  size={420} my={40}>
+                <Container  size={'md'} >
                     {children}
                 </Container>
             </AppShell.Main>
