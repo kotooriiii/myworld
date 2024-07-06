@@ -20,11 +20,13 @@ import {
     Stack,
     Center
 } from '@mantine/core';
+
 import {GoogleButton} from "../../common/components/oauth_buttons/GoogleButton.tsx";
-import {TwitterButton} from "../../common/components/oauth_buttons/TwitterButton.tsx";
+import {MicrosoftButton} from "../../common/components/oauth_buttons/MicrosoftButton.tsx";
+
 import {AuthorLoginRequest} from "../../common/types/auth.ts";
 import {LoginRegisterLayout} from "../../common/layout/LoginRegisterLayout.tsx";
-import {redirectByGoogle} from "../../service/oAuthService.ts";
+import {redirectByGoogle, redirectByMicrosoft} from "../../service/oAuthService.ts";
 import {navigateWithRedirect} from "../../service/RedirectUtils.tsx";
 
 const Login: React.FC = () =>
@@ -54,20 +56,16 @@ const Login: React.FC = () =>
 
         void redirectByGoogle(location.state);
         return <div>Redirecting to authentication provider...</div>
-
-
-//        window.location.href = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=}`;
-
-        //document.location.href = `http://localhost:8080/oauth2/authorization/google?redirectTo=${encodeURIComponent(window.location.origin + from.pathname)}`; //todo
-
-        // const resultAction = await dispatch(loginByGoogle());
-        //
-        // if (login.fulfilled.match(resultAction))
-        // {
-        //     // If login was successful, redirect to the saved URL or default to the homepage
-        //     navigate(from, {replace: true});
-        // }
     };
+
+    const handleLoginByMicrosoft = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    {
+        e.preventDefault();
+
+        void redirectByMicrosoft(location.state);
+        return <div>Redirecting to authentication provider...</div>
+    };
+
 
     interface LoginState
     {
@@ -102,7 +100,10 @@ const Login: React.FC = () =>
                     {
                         handleLoginByGoogle(e)
                     }}>Google</GoogleButton>
-                    <TwitterButton radius="xl">Twitter</TwitterButton>
+                    <MicrosoftButton radius="xl" onClick={(e) =>
+                    {
+                        handleLoginByMicrosoft(e)
+                    }}>Microsoft</MicrosoftButton>
                 </Group>
 
                 <Divider label="Or continue with email" labelPosition="center" my="lg"/>

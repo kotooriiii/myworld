@@ -21,9 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -176,22 +174,19 @@ public class AuthorService
     }
 
     public void uploadAuthorProfileImage(UUID authorId,
-                                         MultipartFile file) {
+                                         byte[] bytes, String fileExtension) {
         checkIfAuthorExistsOrThrow(authorId);
         String imageIconId = UUID.randomUUID().toString();
-        try {
-            s3Service.putObject(
-                    s3Buckets.getAuthor(),
-                    "profile-images/%s/%s".formatted(authorId, imageIconId), //todo how to not hard dcode this path
-                    file.getBytes()
-            );
-        } catch (IOException e) {
-            throw new RuntimeException("failed to upload profile image", e);
-        }
+        s3Service.putObject(
+                s3Buckets.getAuthor(),
+                "profile-images/%s/%s".formatted(authorId, imageIconId), //todo how to not hard dcode this path
+                bytes,
+                fileExtension
+        );
         authorDao.uploadProfileImage(authorId, imageIconId);
     }
 
-    public byte[] getAuthorProfileImage(UUID authorId) {
+    public S3Service.S3ObjectResponse getAuthorProfileImage(UUID authorId) {
         var author = authorDao.selectAuthorById(authorId)
                 .map(authorMapper)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -204,11 +199,10 @@ public class AuthorService
                     "author with id [%s] profile image not found".formatted(authorId));
         }
 
-        byte[] profileImage = s3Service.getObject(
+        return s3Service.getObject(
                 s3Buckets.getAuthor(),
                 "profile-images/%s/%s".formatted(authorId, author.imageIconId())
         );
-        return profileImage;
     }
 
 

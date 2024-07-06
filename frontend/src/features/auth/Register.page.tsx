@@ -23,8 +23,10 @@ import {
     Text,
     TextInput,
 } from '@mantine/core';
+
 import {GoogleButton} from "../../common/components/oauth_buttons/GoogleButton.tsx";
-import {TwitterButton} from "../../common/components/oauth_buttons/TwitterButton.tsx";
+import {MicrosoftButton} from "../../common/components/oauth_buttons/MicrosoftButton.tsx";
+
 import {AuthorRegistrationRequest, Gender} from "../../common/types/auth.ts";
 import {LoginRegisterLayout} from "../../common/layout/LoginRegisterLayout.tsx";
 
@@ -93,7 +95,7 @@ const Register: React.FC = () =>
 
                 <Group grow mb="md" mt="md">
                     <GoogleButton radius="xl">Google</GoogleButton>
-                    <TwitterButton radius="xl">Twitter</TwitterButton>
+                    <MicrosoftButton radius="xl">Twitter</MicrosoftButton>
                 </Group>
 
                 <Divider label="Or continue with email" labelPosition="center" my="lg"/>
