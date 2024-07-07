@@ -184,6 +184,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
                 localStorage.setItem('token', action.payload.token);
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
 
             })
             .addCase(register.rejected, (state, action) =>
@@ -202,6 +204,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
                 localStorage.setItem('token', action.payload.token);
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
 
             })
             .addCase(login.rejected, (state, action) =>
@@ -209,6 +213,8 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload || null;
                 localStorage.removeItem('token');
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
                 state.user = null;
                 state.token = null;
                 state.isAuthenticated = false;
@@ -224,6 +230,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
                 localStorage.setItem('token', action.payload.token);
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
 
             })
             .addCase(authenticate.rejected, (state, action) =>
@@ -231,6 +239,8 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload || null;
                 localStorage.removeItem('token');
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
                 state.user = null;
                 state.token = null;
                 state.isAuthenticated = false;
@@ -246,6 +256,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
                 localStorage.setItem('token', action.payload.token);
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
 
             })
             .addCase(accountInfo.rejected, (state, action) =>
@@ -253,6 +265,8 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload || null;
                 localStorage.removeItem('token');
+                localStorage.removeItem("code_verifier");
+                localStorage.removeItem('oauth_provider');
                 state.user = null;
                 state.token = null;
                 state.isAuthenticated = false;
