@@ -34,7 +34,6 @@ const ProjectsHome: React.FC = () => {
             <AppShell.Main>
                 <AppRichTextEditor/>
             </AppShell.Main>
-            <AppShell.Aside>Aside</AppShell.Aside>
         </AppShell>
     );
 };

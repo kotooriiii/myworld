@@ -25,14 +25,14 @@ public class ProjectCollaborator implements GenericModel
     }
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "project_id")
     @EqualsAndHashCode.Include
     @JsonManagedReference
     private Project project;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author_id")
     @EqualsAndHashCode.Include
     @JsonManagedReference
