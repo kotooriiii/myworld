@@ -4,7 +4,7 @@ import App from "./app/App.tsx";
 import {Provider} from 'react-redux';
 import store from './app/store';
 
-import "./styles/index.pcss"
+import "./styles/partials/globals.pcss"
 import '@fontsource/inter/100.css'
 import '@fontsource/inter/200.css'
 import '@fontsource/inter/300.css'
